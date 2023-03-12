@@ -78,10 +78,10 @@ theme_mode:   # [light|dark]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn: '/assets/img'
+img_cdn: 'https://chirpy-img.netlify.app'
 
 # the avatar on sidebar, support local or CORS resources
-avatar: '/hangyeol.jpeg'
+avatar: '/commons/avatar.jpg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
@@ -90,7 +90,7 @@ comments:
   active:         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   disqus:
-    shortname:  "hangyeols' blog"  # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
+    shortname:  "hangyeol's blog"  # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
   # utterances settings › https://utteranc.es/
   utterances:
     repo:         # <gh-username>/<repo>
