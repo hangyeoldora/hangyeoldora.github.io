@@ -211,11 +211,19 @@
        - <b>count</b>
        
        - ALL
-4. IN
+4. IN (Subquery Expression)
    
-   - 반복
+   - 같은 컬럼에서 값을 찾을 경우, 중복되는 부분을 줄일 수 있음
+   
+   - 반드시 하나의 컬럼을 반환해야 함
+   
+   - `IN`의 결과는 어떠한 동일 서브쿼리 행이 발견될 경우, true를 나타냄
+   
+   - 동일한 행이 발견되지 않을 경우, false
      
      ```sql
+     // expression IN (subquery)
+     
      SELECT * FROM person WHERE country_of_birth = 'China' OR country_of_birth = 'France' OR country_of_birth = 'Brazil';
      // IN을 통해 반복되는 컬럼명을 줄일 수 있음
      SELECT * FROM person WHERE country_of_birth IN ('China','Brazil','France');
@@ -491,6 +499,8 @@
           price numeric,
           CHECK (price>0) // 또는 CONSTRAINT valid_price CHECK (price>0)
       );
+      // 추후 ALTER쪽 추가하
+      ALTER TABLE users ALTER COLUMN create_at SET default 'NOW()';
       ```
     
     - ALTER로 지정 시에 특정 열의 CHECK 값이 만족하지 않으면 실행되지 않음
@@ -529,8 +539,6 @@
       ```
     
     - 업데이트 규칙
-      
-      
 
 23. **Upsert**
     
@@ -598,37 +606,33 @@
           DATE '1952-09-25',
           'Norway'
       ) ON CONFLICT (id) DO NOTHING; // unique키에 하였기에 INSERT 0 0; 반영
-      
-      
       // 2. DO UPDATE
-      INSERT INTO person (
-          id,
-          first_name,
-          last_name,
-          gender,
-          email,
-          date_of_birth,
-          country_of_birth)
-      VALUES (
-          1,
-          'Russ,'
-          'Ruddoch',
-          'Male',
-          'rruddoch7@hhs.gov.uk',
-          DATE '1952-09-25',
-          'Norway'
-      ) ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email; 
-      // INSERT 0 1; 반영
+        INSERT INTO person (
+            id,
+            first_name,
+            last_name,
+            gender,
+            email,
+            date_of_birth,
+            country_of_birth)
+        VALUES (
+            1,
+            'Russ,'
+            'Ruddoch',
+            'Male',
+            'rruddoch7@hhs.gov.uk',
+            DATE '1952-09-25',
+            'Norway'
+        ) ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email; 
+        // INSERT 0 1; 반영
       
       
-      // 다양한 UPDATE 반영 가능
-      ...ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email,
-      last_name = EXCLUDED.last_name, first_name=EXCLUDED.first_name;
+        // 다양한 UPDATE 반영 가능
+        ...ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email,
+        last_name = EXCLUDED.last_name, first_name=EXCLUDED.first_name;
       ```
-    
-    - 
-      
-      
+
+ 
 
 24. 외래키와 Joins
     
@@ -645,15 +649,15 @@
          ```sql
          create table person (
              id BIGSERIAL NOT NULL PRIMARY KEY ,
-         	first_name VARCHAR(105) NOT NULL ,
-         	last_name VARCHAR(150) NOT NULL ,
-         	email VARCHAR(150),
-         	gender VARCHAR(20) NOT NULL ,
-         	date_of_birth DATE NOT NULL ,
-         	country_of_birth VARCHAR(50) NOT NULL,
+             first_name VARCHAR(105) NOT NULL ,
+             last_name VARCHAR(150) NOT NULL ,
+             email VARCHAR(150),
+             gender VARCHAR(20) NOT NULL ,
+             date_of_birth DATE NOT NULL ,
+             country_of_birth VARCHAR(50) NOT NULL,
              // FOREIGN KEY 설정
              car_id BIGINT REFERENCES car(id),
-         	UNIQUE (car_id)
+             UNIQUE (car_id)
          );
          ```
        
@@ -687,25 +691,25 @@
          // car_id가 NULL인 것을 찾는 방법
          // 1. is NULL
          SELECT * FROM person WHERE car_id IS NULL;
-         
-         
+         ```
+
          // 2. LEFT JOIN 사용
          SELECT * FROM person LEFT JOIN car ON car.id = person.car_id WHERE car.* IS NULL;
          ```
-       
+    
        - ㅁㄴㅇ
     
     4. 외래키 삭제
-       
+    
        - 참조하고 있는 키의 레코드를 삭제하려고 할 경우, 에러가 발생
-       
+    
        - 행을 없애거나 참조하고 있는 키의 데이터를 NULL로 변경
-         
+    
          ```sql
          DELETE FROM person WHERE id=3;
          DELETE FROM car WHERE id=3;
          ```
-       
+    
        - ㄴㅇ
 
 25. CSV로 결과 Export 하기
@@ -746,20 +750,20 @@
        - javascript function
     
     2- 유용한 것은 `uuid-ossp` 
-       
-       - UUIDs를 생성해줌
-         
-         > Universally unique identifier (UUID)
-         > 
-         > - 글로벌적으로 유일함
-       
-       - install 방법 (uuid-ossp)
-         
-         ```sql
-         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-         // 성공적으로 설치 시, CREATE EXTENSION 문구 출
-         ```
-       
-       - sd
+    
+    - UUIDs를 생성해줌
+      
+      > Universally unique identifier (UUID)
+      > 
+      > - 글로벌적으로 유일함
+    
+    - install 방법 (uuid-ossp)
+      
+      ```sql
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      // 성공적으로 설치 시, CREATE EXTENSION 문구 출력
+      ```
+    
+    - sd
 
 plv8
