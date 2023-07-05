@@ -10,13 +10,11 @@
 
 - DB
   
-  - \l -> list
+  - `\l` -> Database 목록
   
-  - \c "database name" -> db 변경
+  - `\c` "database name" -> 데이터베이스 변경
   
-  - \i "file path"
-  
-  - \x 컬럼 단위 보기
+  - `\i` "file path" => 외부 SQL을 가져올 경우 사용
 
 - 테이블 생성 (relation)
   
@@ -47,6 +45,8 @@
 - `\d "table_name` 으로 테이블, 뷰, 시퀀스 또는 인덱스 설명 확인 가능
 
 - `\dt` 는 테이블 목록만 조회
+
+- `\x` 컬럼 단위 보기(ON/OFF) => 테이블이 가로로 넓게 나올 경우, 보기 편하게 해줌
 
 - int 대신 bigserial을 사용하면 자동으로 증가하기 때문에 이전 번호를 기억할 필요 X
   
@@ -95,7 +95,7 @@
   
   - 정렬방식은 ASC(기본값), DESC
   
-  `SELECT * FROM person ORDER BY coutry_of_birth "정렬방식"`
+  `SELECT * FROM person ORDER BY country_of_birth "정렬방식"`
 
 - Distinct
   
@@ -229,7 +229,7 @@
      SELECT * FROM person WHERE country_of_birth IN ('China','Brazil','France');
      ```
    
-   - 반
+   - -
 
 5. between
    
@@ -319,7 +319,7 @@
       SELECT make, model, price AS original_price, ROUND(price * .10,2) AS ten_percent_value, ROUND(price - (price * .10),2) AS discount_after_10_percent FROM car;
       ```
     
-    - sdsd
+    - -
 
 12. Coalesce
     
@@ -342,7 +342,7 @@
       SELECT COALESCE(email,'Email not provided') from person;
       ```
     
-    - ㄴ
+    - -
 
 13. NULLIF
     
@@ -358,7 +358,7 @@
     
     - NULLIF는 value1과 value2가 <u>같으면 null</u>을 반환하고 <u>아니라면 value1</u>을 반환
     
-    - a
+    - -
 
 14. Timestamps and Date
     
@@ -370,7 +370,7 @@
       SELECT NOW()::TIME;
       ```
     
-    - asdsad
+    - -
 
 15. Interval Operator
     
@@ -388,7 +388,7 @@
       SELECT (NOW()+INTERVAL '10 MONTHS')::DATE; // 2024-05-03
       ```
     
-    - sds
+    - -
 
 16. Extracting fields
     
@@ -421,7 +421,7 @@
       SELECT first_name, last_name, gender, country_of_birth, date_of_birth, AGE(date_of_birth) AS age FROM person LIMIT 5;
       ```
     
-    - ㄴㅇㄹ
+    - -
 
 18. Primary Key (PK)
     
@@ -453,7 +453,8 @@
       ALTER TABLE person ADD PRIMARY KEY (id);
       ```
     
-    - ㄴㅇ
+    - -
+      
 
 19. Unique 제약조건
     
@@ -516,6 +517,7 @@
       ```
     
     - 삭제 후, 다시 데이터를 넣으면 BIGSERIAL로 부여한 PRIMARY KEY `id`는 1이 아닌 1001번대부터 시작 => 이는 <u>시퀀스를 리셋</u>하지 않았기 때문임
+      
     
     - 시퀀스 리셋 (TRUNCATE)
       
@@ -527,7 +529,7 @@
       sert하면 정상적으로 1부터 나옴
       ```
     
-    - ㄴㅇ
+    - -
 
 22. Update Record
     
@@ -565,6 +567,7 @@
          
          - 등록 요청을 받은 후, 2초 정도 후에 이메일 수정 등을 하려고 할 때 사용
          - `DO UPDATE SET column1 = value1,.. WHERE` 로 테이블 필드 업데이트
+           
       
       ```sql
       // 같은 id로 INSERT할 경우, 에러 발생
@@ -626,13 +629,12 @@
         ) ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email; 
         // INSERT 0 1; 반영
       
-      
-        // 다양한 UPDATE 반영 가능
-        ...ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email,
-        last_name = EXCLUDED.last_name, first_name=EXCLUDED.first_name;
+      // 다양한 UPDATE 반영 가능
+       ...ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email,
+       last_name = EXCLUDED.last_name, first_name=EXCLUDED.first_name;
       ```
-
- 
+      
+        
 
 24. 외래키와 Joins
     
@@ -665,7 +667,7 @@
        
        - 존재하는 값이나 없는 id로 UPDATE하는 경우, 에러 발생
        
-       - ㄴㅇ
+       - -
     
     2. inner join
        
@@ -677,13 +679,13 @@
          SELECT person.first_name, car.make, car.model, car.price FROM person JOIN car ON person.car_id = car.id;
          ```
        
-       - ㄷㅈㄱ
+       - -
     
     3. left join
        
        - 두 테이블을 합치지만 A 테이블 전체와 B와 매치되는 부분을 합침
        
-       - ㅇㄴ
+       - -
          
          ```sql
          SELECT * FROM person LEFT JOIN car ON car.id = person.car_id;
@@ -691,25 +693,23 @@
          // car_id가 NULL인 것을 찾는 방법
          // 1. is NULL
          SELECT * FROM person WHERE car_id IS NULL;
-         ```
-
          // 2. LEFT JOIN 사용
          SELECT * FROM person LEFT JOIN car ON car.id = person.car_id WHERE car.* IS NULL;
          ```
-    
-       - ㅁㄴㅇ
+       
+       - -
     
     4. 외래키 삭제
-    
+       
        - 참조하고 있는 키의 레코드를 삭제하려고 할 경우, 에러가 발생
-    
+       
        - 행을 없애거나 참조하고 있는 키의 데이터를 NULL로 변경
-    
+         
          ```sql
          DELETE FROM person WHERE id=3;
          DELETE FROM car WHERE id=3;
          ```
-    
+       
        - ㄴㅇ
 
 25. CSV로 결과 Export 하기
@@ -720,28 +720,57 @@
       \copy (SELECT * FROM person LEFT JOIN car ON car.id=person.car_id) TO 'C:\Users\USER\Desktop\results.csv' DELIMITER ',' CSV HEADER;
       ```
     
-    - ㅇㄹ
+    - -
 
-26. Serial & Sequence
+26. Sequence & Serial
     
-    1. Serial
+    1. Sequence
        
-       - sa
+       - 고유한 정수를 생성할 수 있는 데이터베이스 개체
        
-       - as
-       
-       - as
-    
-    2. Sequence
-       
-       - fds
+       - 정수를 기반으로 하며 숫자를 순서대로 나타내기 위해 사용
          
          ```sql
-         SELECT * from person_id_seq; // last_value, log_cnt, is_called 출
-         SELECT nextval('person_id_seq'); // 수 증가
+         // 기존 person table에 BIGSERIAL 타입으로 부여한 ID 값에 있는 sequence
+         SELECT * FROM person_id_seq; // result => last_value, log_cnt, is_called
+         
+         // 수 증가 구문이며, autoIncrement, BIGSERIAL에는 자동
+         SELECT nextval('person_id_seq');
+         
+         // 시퀀스 새로 생성하여 증가
+         CREATE SEQUENCE apple;
+         SELECT nextval('apple'); // 1
+         SELECT nextval('apple'); // 2
          ```
        
-       - df
+       - -
+    
+    2. Serial
+       
+       - sequence 개체는 `CREATE SEQUENCE`를 통해 만들어야 하고 불편한 점들이 많은데, 이를 해결하기 위해서 `SERIAL`이라는 자료형을 제공
+       
+       - 가상의 데이터 유형이며, 독립된 SEQUENCE 개체를 이용하는 것보다 간단
+         
+         ```sql
+         // DataType에 SMALLSERIAL(2 bytes), SERIAL(4 bytes),
+         // BIGSERIAL(8 bytes)을 부여할 경우, autoIncrement
+         // 즉, nextval('seq_name')이 자동으로 붙음
+         CREATE TABLE nice(
+             idx BIGSERIAL,
+             name VARCHAR(100)
+         );
+         
+         // 2. 직접 부여하는 경우
+         // - sequence 생성
+         CREATE SEQUENCE nice_id_seq;
+         // - 테이블 생성하면서 해당 컬럼값에 DEFAULT로 설정
+         CREATE TABLE good(
+             idx INTEGER NOT NULL DEFAULT nextval('nice_id_seq')
+         );
+         ALTER SEQUENCE nice_id_seq OWNED BY good.id;
+         ```
+       
+       - -
 
 27. Extensions
     
@@ -749,21 +778,133 @@
        
        - javascript function
     
-    2- 유용한 것은 `uuid-ossp` 
+    2. 조회는 `SELECT * FROM pg_available_extensions;`
     
-    - UUIDs를 생성해줌
-      
-      > Universally unique identifier (UUID)
-      > 
-      > - 글로벌적으로 유일함
+    3. 유용한 것은 `uuid-ossp`
+       
+       - UUID를 생성해줌
+         
+         > Universally unique identifier (UUID)
+         > 
+         > - 글로벌적으로 유일
+       
+       - install 방법
+         
+         ```sql
+         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+         // 성공적으로 설치 시, CREATE EXTENSION 문구 출력
+         ```
+       
+       - -
     
-    - install 방법 (uuid-ossp)
-      
-      ```sql
-      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-      // 성공적으로 설치 시, CREATE EXTENSION 문구 출력
-      ```
     
-    - sd
 
-plv8
+28. Control Structures
+    
+    - postgreSQL에서 가장 유용하고 중요한 부분
+    
+    - SQL 데이터를 유연하고 강력하게 조작할 수 있음
+      
+      
+      1. RETURN
+         
+         - return과 함께 있는 표현식은 함수를 종료하고, 호출 대상에게 표현식의 값을 반환함
+         
+         - -
+      
+      2. 조건
+         
+         - IF와 CASE 절은 조건에 따른 명령을 실행할 수 있도록 함
+         
+         - 3가지의 IF 구문
+           
+           1. `IF...THEN...END IF`
+           
+           2. `IF...THEN...ELSE...END IF`
+           
+           3. `IF...THEN...ELSIF...THEN...ELSE...END IF`
+         
+         - 2가지의 CASE 구문
+           
+           1. `CASE...WHEN...THEN...ELSE...END CASE`
+              
+              ```sql
+              // 예시
+              CASE x // search-expression
+                  WHEN 1, 2 // expression
+                  THEN 
+                      msg := 'one or two'; // statements
+                  ELSE // optional
+                      msg := 'other value than one or two';
+              END CASE;
+              ```
+              
+              - `:=` 할당자로서 `=`랑 동일하며, 비교연산에서는 사용 불가
+                
+           
+           2. `CASE WHEN...THEN...ELSE...END CASE`
+              
+              - 자주 쓰이는 요소
+              
+              ```sql
+              // 예시
+              CASE
+                  WHEN x BETWEEN 0 AND 10 THEN
+                      msg := 'value is between zero and ten';
+                  WHEN x BETWEEN 11 AND 20 THEN
+                      msg := 'value is between eleven and twenty'
+              END CASE;
+              ```
+         
+         
+      
+      3. LOOP & EXIT
+         
+         - `LOOP`는 조건적이지 않은 반복문으로서 EXIT나 RETURN에 의해 종료되기 전까지는끝없이 반복함
+         
+         - `LOOP`의 선택사항인 `label`은 EXIT와 CONTINUE로 사용 가능
+           
+           ```sql
+           LOOP
+               IF count > 0 THEN
+                   EXIT; // exit loop
+               END IF;
+               // 위 조건을 줄이면 다음과 같음
+               EXIT WHEN count > 0;
+           END LOOP;
+           ```
+         
+         - EXIT는 `label`이 주어지지 않으면 내부 loop를 멈추고 END LOOP를 실행
+         
+         - `label`
+         
+         - `WHEN`이 명시된다면, boolean-표현식이 `참`일때만 loop를 빠져나감
+      
+      4. CONTINUE
+         
+         - `CONTINUE [ label ] [ WHEN boolean-expression ]`
+         
+         - label이 없다면, 다음 요소의 반복으로 넘어가서 시작되며, 반복문 안에 남아있던 모든 요소가 스킵된다.
+         
+         - label이 존재한다면 명시해놓은대로 실행
+         
+         - WHEN이 명시되어 있다면 다음 요소의 루프는오로지 `boolean-expression`이 <u>참</u>일 경우에만 시작
+           
+           ```sql
+           LOOP
+               EXIT WHEN count > 100; // count가 100 초과라면 EXIT
+               CONTINUE WHEN count < 50; // count가 50 미만이면 CONTINUE
+           EXIT LOOP;
+           ```
+         
+         - -
+
+29. Table Expression
+    
+    - table expression은 WHERE, GROUP BY, HAVING 절을 옵션으로 가지는 FROM 절을 포함
+    
+    - INNER와 OUTER 키워드는 모든 폼에서 옵션 요소로서 없어도 동일한 결과값
+    
+    - INNER는 기본적인 요소 / LEFT, RIGHT, FULL
+    
+    - 
