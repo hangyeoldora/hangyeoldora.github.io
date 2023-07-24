@@ -1,3 +1,12 @@
+---
+title: "[PostgreSQL] 테스트 DB로 알아보는 PostgreSQL 필수 문법"
+author: hangyeoldora
+categories: [All, PostgreSQL]
+tags: [postgreSQL]
+---
+
+
+
 # postgreSQL
 
 ## 정의
